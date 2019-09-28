@@ -1,0 +1,4 @@
+{
+    "jwtPrivateKey":"ecommerce_jwtPrivateKey",
+    "_comment": "add ecommerce_jwtPrivateKey in Enivrment_variables..."
+}
