@@ -1,16 +1,17 @@
 const {User, validate} = require('../models/user'); 
 const config=require('config');
+const asyncMiddleWare =require('../middleWare/async');
 const jwt=require('jsonwebtoken');
 const bcrypt=require('bcryptjs');
 const _= require('lodash');
 const express = require('express');
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', asyncMiddleWare (async (req, res) => {
+  //throw new Error('could not find product');
   const users = await User.find();
-
   res.send(users);
-});
+}));
 
 router.post('/', async (req, res) => {
   
@@ -26,10 +27,8 @@ router.post('/', async (req, res) => {
   const salt =await bcrypt.genSalt(10);
    user.password=await bcrypt.hash(req.body.password,salt);
   user = await user.save();
- 
   const token=user.generateAuthToken();
-  res.header("x-auth-token",token)
-  .send(_.pick(user,['firstName','firstName','email']));
+  res.header("x-auth-token",token).send(_.pick(user,['firstName','firstName','email']));
 });
 
 router.put('/:id', async (req, res) => {

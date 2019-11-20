@@ -1,7 +1,7 @@
 const config = require('config'); 
 const {User} = require('../models/user'); 
-const auth = require('../utils/auth'); 
-const authorizedAdmin = require('../utils/authorized'); 
+const auth = require('../middleWare/auth'); 
+const authorizedAdmin = require('../middleWare/authorized'); 
 const bcrypt=require('bcryptjs');
 const jwt=require('jsonwebtoken');
 const Joi = require('joi');
@@ -11,7 +11,6 @@ const router = express.Router();
 
 router.get('/',auth, async (req, res) => {
   console.log('router handler ');
-  
   const users = await User.find();
 
   res.send(users);
@@ -31,7 +30,7 @@ router.post('/', async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   let user = await User.findOne({email:req.body.email});
-  console.log(user)
+  console.log(user);
   if (!user) return res.status(400).send("Invalid Email or Password..");
 
   let isvalid = await bcrypt.compare( req.body.password ,user.password);
@@ -40,7 +39,9 @@ router.post('/', async (req, res) => {
   if (!isvalid) return res.status(400).send("Invalid Email or Password..");
 
   const token=user.generateAuthToken();
-  res.send(token);
+ 
+  res.header("x-auth-token",token).send(_.pick(user,['firstName','firstName','email']));
+  
 });
 //information expert pricples
 

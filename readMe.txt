@@ -20,3 +20,8 @@ Ordering
 Favorites(Wishlist)
 Reviews
 offerss
+
+
+add jwtprivatekey enviroment varaiables
+
+set ecommerce_jwtPrivateKey=mySecureKey
